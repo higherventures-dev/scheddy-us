@@ -1,0 +1,121 @@
+@import "tailwindcss";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Base design tokens */
+:root {
+  /* Dark slate background + soft light foreground to match the new layout */
+  --background: #020617; /* slate-950-ish */
+  --foreground: #e5e7eb; /* slate-200-ish */
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  /* Hook into the font variable provided by next/font in layout.tsx */
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+}
+
+/* You can keep this for future light/dark tweaks if you want,
+   but right now the layout is intentionally dark-first. */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #020617;
+    --foreground: #e5e7eb;
+  }
+}
+
+/* Smooth scrolling for section links (#hero, #pricing, etc.) */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Let Tailwind classes control background/text; don't override with Arial */
+body {
+  background: var(--background);
+  color: var(--foreground);
+  /* Use the DM Sans var we set in layout.tsx, with sensible fallbacks */
+  font-family: var(--font-sans), system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+}
+
+/* --- Button pulse animation --- */
+
+@keyframes button-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05); /* slight stretch */
+  }
+}
+
+/* Reusable pulse class for buttons (or anything really) */
+.btn-pulse {
+  animation: button-pulse 1.6s ease-in-out infinite;
+}
+
+/* Optional: pause the pulse on hover so it feels intentional */
+.btn-pulse:hover {
+  animation-play-state: paused;
+}
+
+/* Respect reduced-motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .btn-pulse {
+    animation: none;
+  }
+}
+
+/* --- Logo marquee for CTA --- */
+.logo-marquee-wrapper {
+  overflow: hidden;
+}
+
+.logo-marquee-row {
+  display: flex;
+  gap: 1.5rem;
+  animation: logo-marquee 28s linear infinite;
+}
+
+.logo-marquee-row:hover {
+  animation-play-state: paused;
+}
+
+@keyframes logo-marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+/* --- Angled screenshot marquee --- */
+.screenshot-marquee-wrapper {
+  overflow: hidden;
+}
+
+.screenshot-marquee-track {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+  animation: screenshot-marquee 32s linear infinite;
+}
+
+.screenshot-marquee-track:hover {
+  animation-play-state: paused;
+}
+
+@keyframes screenshot-marquee {
+  0% {
+    transform: rotate(-10deg) translateY(0);
+  }
+  100% {
+    transform: rotate(-10deg) translateY(-50%);
+  }
+}
