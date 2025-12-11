@@ -39,8 +39,7 @@ export default function Hero() {
 
         <p className="mt-4 text-sm md:text-base text-slate-200 max-w-2xl mx-auto">
           Whether you're solo or running a full studio, Scheddy brings clarity to
-          your calendar and structure to your workflow. Every artist, every room,
-          and every session stays in sync.
+          your calendar and structure to your workflow. Each client, appointment and session stays in sync.
         </p>
 
         <div className="flex flex-col items-center justify-center gap-4 mt-8">

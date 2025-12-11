@@ -39,7 +39,7 @@ const plans = [
     name: "Studio Level",
     price: "$129 / Month",
     subtitle:
-      "For busy studios coordinating multiple artists, chairs, and rooms.",
+      "For studios coordinating multiple artists.",
     highlight: false,
     buttonLabel: "Talk to Us",
     features: [
@@ -60,7 +60,7 @@ export default function PricingSection() {
           Pricing
         </p>
         <h2 className="mt-2 text-3xl md:text-4xl font-semibold text-slate-50">
-          Plans built for every chair and studio
+          Plans built for every Artist and Studio
         </h2>
         <p className="mt-3 text-slate-300">
           Start on the waitlist, grow as a solo artist, and scale seamlessly
@@ -122,7 +122,7 @@ export default function PricingSection() {
             </div>
 
             <div className="mt-6 pt-2 text-xs text-slate-400">
-              <button className="underline underline-offset-4 hover:text-slate-200">
+              <button className="underline underline-offset-4 hover:text-slate-200 hide">
                 See details
               </button>
             </div>

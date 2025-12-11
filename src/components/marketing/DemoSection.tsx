@@ -13,7 +13,7 @@ const demos = [
     icon: "🗓️",
     title: "See every booking at a glance",
     description:
-      "Get a clean, real-time view of your day, week, or month so you always know who’s coming in and when.",
+      "Get a clean, real-time view of your day, week or month so you always know who’s coming in and when.",
     image: "/assets/images/screenshots/dashboard-screenshot.png",
     alt: "Scheddy overview calendar",
   },
@@ -22,16 +22,16 @@ const demos = [
     icon: "👥",
     title: "Share availability without the back-and-forth",
     description:
-      "Send a single link that lets clients pick from the times you actually want to work—no more DMs or double-booking.",
+      "Send a single link that lets clients pick from your saved availability resulting in less DM’s and double-bookings.",
     image: "/assets/images/screenshots/calendar-screenshot.png",
     alt: "Scheddy availability sharing",
   },
   {
     id: "team",
     icon: "💫",
-    title: "Keep your whole studio in sync",
+    title: "Know whats happening next",
     description:
-      "Coordinate artists, chairs, and rooms from one place so every appointment and walk-in feels smooth.",
+      "A beautifully clear calendar view that helps every artist to stay aligned.",
     image: "/assets/images/screenshots/bookings-screenshot.png",
     alt: "Scheddy team scheduling",
   },

@@ -203,7 +203,7 @@ export default function Features() {
         </h2>
 
         <p className="mt-4 text-slate-300 max-w-3xl mx-auto">
-          Scheddy gives you everything you need to manage, share, and sync
+          Scheddy gives you everything you need to manage, share and sync
           schedules effortlessly.
         </p>
 
@@ -216,9 +216,7 @@ export default function Features() {
               Smart Booking Links
             </h3>
             <p className="text-sm text-slate-400">
-              Give clients one link and Scheddy handles the rest—availability,
-              project details, reference uploads, and booking rules
-              automatically.
+              Give clients one link and Scheddy handles the rest including saved availability, new project details, reference uploads and booking policies automatically.
             </p>
           </div>
 
@@ -229,8 +227,7 @@ export default function Features() {
               Real-Time Schedule Sync
             </h3>
             <p className="text-sm text-slate-400">
-              Your calendar updates instantly across every device and every
-              artist, keeping double-bookings and crossed wires impossible.
+              Your calendar changes update instantly across all devices keeping double-bookings out of the question.
             </p>
           </div>
 
@@ -241,7 +238,7 @@ export default function Features() {
               Artist & Studio Availability
             </h3>
             <p className="text-sm text-slate-400">
-              Block healing days, travel time, preferred hours, and custom rules
+              Block days off, travel time, preferred hours and custom rules
               so every booking fits your actual workflow.
             </p>
           </div>
@@ -256,8 +253,7 @@ export default function Features() {
               Deposit & Payment Tracking
             </h3>
             <p className="text-sm text-slate-400">
-              Collect deposits securely, track balances, and auto-flag unpaid
-              sessions so every booking is backed and every artist gets paid.
+              Collect deposits securely, view income data and auto-flag unpaid deposits to ensure every booking is backed and locked-in.
             </p>
           </div>
 
@@ -268,9 +264,7 @@ export default function Features() {
               Automated Reminders & Policies
             </h3>
             <p className="text-sm text-slate-400">
-              Scheddy sends confirmations, reminders, and no-show warnings on
-              your behalf, enforcing studio policies without awkward
-              conversations.
+              Scheddy sends text and email confirmations, reminders and no-show warnings on your behalf, enforcing your policies without awkward conversations.
             </p>
           </div>
 
@@ -278,10 +272,10 @@ export default function Features() {
           <div className="bg-slate-950/90 rounded-3xl border border-slate-800 shadow-sm p-6 flex flex-col gap-3">
             <IconDashboard className="h-7 w-7 text-sky-400" />
             <h3 className="text-lg font-semibold text-slate-50">
-              Unified Studio View
+              Unified Scheduling for Every Artist
             </h3>
             <p className="text-sm text-slate-400">
-              See every booking in one clean dashboard built for busy shops.
+              Whether you work alone or run a full team, Scheddy gives you one simple dashboard to manage your day.
             </p>
           </div>
         </div>
