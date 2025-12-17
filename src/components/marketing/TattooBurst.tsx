@@ -1,55 +1,35 @@
 "use client";
 
-import {
-  useEffect,
-  useRef,
-  forwardRef,
-  useImperativeHandle,
-} from "react";
+import { useEffect, useRef } from "react";
 
-/* ===============================
-   Public handle
-================================ */
-export type TattooBurstHandle = {
-  fire: () => void;
-};
-
-/* ===============================
-   Tattoo sources (transparent PNGs)
-================================ */
-const tattooSources = [
-  "/assets/tattoos/1t.png",
-  "/assets/tattoos/2t.png",
-  "/assets/tattoos/3t.png",
-  "/assets/tattoos/4t.png",
-  "/assets/tattoos/5t.png",
-  "/assets/tattoos/6t.png",
-  "/assets/tattoos/7t.png",
-  "/assets/tattoos/8t.png",
-  "/assets/tattoos/9t.png",
-];
-
-/* ===============================
-   Particle model
-================================ */
 type Particle = {
-  img: HTMLImageElement;
   x: number;
   y: number;
   vx: number;
   vy: number;
   rotation: number;
   vr: number;
-  life: number;
   size: number;
+  image: HTMLImageElement;
 };
 
-const TattooBurst = forwardRef<TattooBurstHandle>(function TattooBurst(_, ref) {
+const tattooSources = [
+  "/assets/tattoos/1.png",
+  "/assets/tattoos/2.png",
+  "/assets/tattoos/3.png",
+  "/assets/tattoos/4.png",
+  "/assets/tattoos/5.png",
+  "/assets/tattoos/6.png",
+  "/assets/tattoos/7.png",
+  "/assets/tattoos/8.png",
+  "/assets/tattoos/9.png",
+];
+
+export default function TattooBurst() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const ctxRef = useRef<CanvasRenderingContext2D | null>(null);
   const imagesRef = useRef<HTMLImageElement[]>([]);
   const particlesRef = useRef<Particle[]>([]);
-  const rafRef = useRef<number>();
+  const rafRef = useRef<number | null>(null); // ✅ FIX
 
   /* ===============================
      Setup canvas + preload images
@@ -62,103 +42,102 @@ const TattooBurst = forwardRef<TattooBurstHandle>(function TattooBurst(_, ref) {
     canvas.style.zIndex = "9999";
     document.body.appendChild(canvas);
 
+    const ctx = canvas.getContext("2d")!;
     canvasRef.current = canvas;
-    ctxRef.current = canvas.getContext("2d");
 
     const resize = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
     };
+
     resize();
     window.addEventListener("resize", resize);
 
-    // Preload tattoo PNGs
+    // Preload tattoo images
     tattooSources.forEach((src) => {
       const img = new Image();
       img.src = src;
       imagesRef.current.push(img);
     });
 
-    const tick = () => {
-      const ctx = ctxRef.current;
-      if (!ctx || !canvasRef.current) return;
-
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      particlesRef.current = particlesRef.current.filter(
-        (p) => p.life > 0
-      );
-
-      particlesRef.current.forEach((p) => {
-        p.x += p.vx;
-        p.y += p.vy;
-
-        // Ink-heavy gravity (slower fall)
-        p.vy += 0.35;
-
-        p.rotation += p.vr;
-        p.life -= 1;
-
-        ctx.save();
-        ctx.translate(p.x, p.y);
-        ctx.rotate(p.rotation);
-        ctx.globalAlpha = Math.min(p.life / 120, 1);
-
-        const s = p.size;
-        ctx.drawImage(p.img, -s / 2, -s / 2, s, s);
-
-        ctx.restore();
-      });
-
-      rafRef.current = requestAnimationFrame(tick);
-    };
-
-    tick();
-
     return () => {
-      cancelAnimationFrame(rafRef.current!);
       window.removeEventListener("resize", resize);
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
       canvas.remove();
     };
   }, []);
 
   /* ===============================
+     Animation loop
+  ================================ */
+  const animate = () => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext("2d")!;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    particlesRef.current.forEach((p, i) => {
+      p.vy += 0.35;
+      p.x += p.vx;
+      p.y += p.vy;
+      p.rotation += p.vr;
+
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rotation);
+      ctx.drawImage(
+        p.image,
+        -p.size / 2,
+        -p.size / 2,
+        p.size,
+        p.size
+      );
+      ctx.restore();
+
+      if (p.y > canvas.height + 200) {
+        particlesRef.current.splice(i, 1);
+      }
+    });
+
+    rafRef.current = requestAnimationFrame(animate);
+  };
+
+  /* ===============================
      Public trigger
   ================================ */
-  useImperativeHandle(ref, () => ({
-    fire() {
-      // Respect reduced motion
-      if (
-        window.matchMedia("(prefers-reduced-motion: reduce)").matches
-      ) {
-        return;
-      }
+  const fire = () => {
+    const canvas = canvasRef.current;
+    if (!canvas || imagesRef.current.length === 0) return;
 
-      const cx = window.innerWidth / 2;
-      const cy = window.innerHeight * 0.25;
+    const centerX = canvas.width / 2;
+    const centerY = canvas.height * 0.25;
 
-      imagesRef.current.forEach((img) => {
-        // 2–3 particles per tattoo feels premium
-        const count = window.innerWidth < 768 ? 1 : 2;
+    for (let i = 0; i < 22; i++) {
+      const img =
+        imagesRef.current[
+          Math.floor(Math.random() * imagesRef.current.length)
+        ];
 
-        for (let i = 0; i < count; i++) {
-          particlesRef.current.push({
-            img,
-            x: cx,
-            y: cy,
-            vx: (Math.random() - 0.5) * 10,
-            vy: -Math.random() * 14 - 8,
-            rotation: Math.random() * Math.PI * 2,
-            vr: (Math.random() - 0.5) * 0.08,
-            life: 140,
-            size: 220 + Math.random() * 120,
-          });
-        }
+      particlesRef.current.push({
+        x: centerX,
+        y: centerY,
+        vx: (Math.random() - 0.5) * 12,
+        vy: Math.random() * -14 - 6,
+        rotation: Math.random() * Math.PI,
+        vr: (Math.random() - 0.5) * 0.2,
+        size: 220 + Math.random() * 120, // 🔥 BIG TATTOOS
+        image: img,
       });
-    },
-  }));
+    }
+
+    if (!rafRef.current) animate();
+  };
+
+  /* Expose global trigger */
+  useEffect(() => {
+    (window as any).fireTattooBurst = fire;
+  }, []);
 
   return null;
-});
-
-export default TattooBurst;
+}
