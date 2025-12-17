@@ -1,12 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
+import NextImage from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 
+/* ===============================
+   Demo content
+================================ */
 const demos = [
   {
     id: "overview",
@@ -38,14 +41,14 @@ const demos = [
 ];
 
 export default function DemoSection() {
-  const [activeId, setActiveId] = useState<string>(demos[0]?.id);
-  const activeDemo = demos.find((demo) => demo.id === activeId) ?? demos[0];
+  const [activeId, setActiveId] = useState(demos[0].id);
+  const activeDemo = demos.find((d) => d.id === activeId) ?? demos[0];
 
   return (
     <div className="mx-auto max-w-7xl px-4 md:px-8" id="scheddy-overview">
       <div className="grid gap-10 md:grid-cols-[minmax(0,1fr)_minmax(0,2fr)] items-start">
 
-        {/* LEFT: Text navigation */}
+        {/* LEFT */}
         <div className="space-y-6">
           <p className="text-xs font-semibold tracking-[0.2em] text-slate-400 uppercase">
             Product tour
@@ -88,26 +91,10 @@ export default function DemoSection() {
           </div>
         </div>
 
-        {/* RIGHT: Screenshot preview */}
+        {/* RIGHT */}
         <div className="relative md:mr-[-4rem] lg:mr-[-6rem]">
-          <div
-            className="
-              relative w-full h-[420px] md:h-[520px] lg:h-[620px]
-              overflow-hidden rounded-3xl border border-slate-800
-              bg-slate-900 shadow-lg backdrop-blur-md
-            "
-          >
-            {/* BLUE COLOR WASH */}
-            <div
-              className="
-                absolute inset-0
-                bg-gradient-to-br from-blue-900/40 via-blue-800/30 to-blue-900/20
-                mix-blend-multiply
-                z-10 pointer-events-none
-              "
-            />
-
-            {/* Additional depth layer */}
+          <div className="relative w-full h-[420px] md:h-[520px] lg:h-[620px] overflow-hidden rounded-3xl border border-slate-800 bg-slate-900 shadow-lg">
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-900/40 via-blue-800/30 to-blue-900/20 z-10 pointer-events-none" />
             <div className="absolute inset-0 bg-black/20 z-20 pointer-events-none" />
 
             <AnimatePresence mode="wait">
@@ -119,29 +106,19 @@ export default function DemoSection() {
                 transition={{ duration: 0.35 }}
                 className="absolute inset-0 z-0"
               >
-                <Image
+                <NextImage
                   src={activeDemo.image}
                   alt={activeDemo.alt}
                   fill
                   className="object-cover opacity-[0.92]"
-                  sizes="(min-width: 1024px) 60vw, 100vw"
                 />
               </motion.div>
             </AnimatePresence>
           </div>
-
-          {/* Label under screenshot */}
-          <div className="mt-3 text-xs text-slate-400 max-w-full text-right">
-            <span className="inline-flex items-center gap-1 rounded-full border border-slate-700 bg-slate-900 px-3 py-1 mr-2">
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
-              Live product view
-            </span>
-            <span>{activeDemo.alt}</span>
-          </div>
         </div>
       </div>
 
-      {/* Call to action below section */}
+      {/* CTA */}
       <div className="flex flex-col items-center justify-center gap-4 mt-8">
         <Button
           asChild

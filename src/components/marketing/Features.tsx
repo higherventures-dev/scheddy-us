@@ -1,20 +1,21 @@
 "use client";
-import Link from "next/link";
-import Image from "next/image";
+
 import { Button } from "@/components/ui/button";
 
 type IconProps = {
   className?: string;
 };
 
-/* Simple representative icons */
+type FeaturesProps = {
+  onProductTourClick: () => void;
+};
+
+/* ===============================
+   Icons
+================================ */
 function IconLink({ className }: IconProps) {
   return (
-    <svg
-      viewBox="0 0 24 24"
-      aria-hidden="true"
-      className={className}
-    >
+    <svg viewBox="0 0 24 24" aria-hidden="true" className={className}>
       <path
         d="M9.5 14.5 7 17a3 3 0 1 1-4.24-4.24l3-3A3 3 0 0 1 9.5 11"
         stroke="currentColor"
@@ -41,11 +42,7 @@ function IconLink({ className }: IconProps) {
 
 function IconSync({ className }: IconProps) {
   return (
-    <svg
-      viewBox="0 0 24 24"
-      aria-hidden="true"
-      className={className}
-    >
+    <svg viewBox="0 0 24 24" aria-hidden="true" className={className}>
       <path
         d="M5 8.5V5h3.5"
         stroke="currentColor"
@@ -80,18 +77,8 @@ function IconSync({ className }: IconProps) {
 
 function IconClockRules({ className }: IconProps) {
   return (
-    <svg
-      viewBox="0 0 24 24"
-      aria-hidden="true"
-      className={className}
-    >
-      <circle
-        cx="12"
-        cy="12"
-        r="6.5"
-        stroke="currentColor"
-        strokeWidth="1.6"
-      />
+    <svg viewBox="0 0 24 24" aria-hidden="true" className={className}>
+      <circle cx="12" cy="12" r="6.5" stroke="currentColor" strokeWidth="1.6" />
       <path
         d="M12 9v3.2l2 1.3"
         stroke="currentColor"
@@ -111,11 +98,7 @@ function IconClockRules({ className }: IconProps) {
 
 function IconCurrency({ className }: IconProps) {
   return (
-    <svg
-      viewBox="0 0 24 24"
-      aria-hidden="true"
-      className={className}
-    >
+    <svg viewBox="0 0 24 24" aria-hidden="true" className={className}>
       <path
         d="M9 7h4.5a2.5 2.5 0 0 1 0 5H10a2.5 2.5 0 0 0 0 5h5"
         stroke="currentColor"
@@ -135,11 +118,7 @@ function IconCurrency({ className }: IconProps) {
 
 function IconBellPolicy({ className }: IconProps) {
   return (
-    <svg
-      viewBox="0 0 24 24"
-      aria-hidden="true"
-      className={className}
-    >
+    <svg viewBox="0 0 24 24" aria-hidden="true" className={className}>
       <path
         d="M12 4a4 4 0 0 0-4 4v2.9c0 .4-.13.8-.37 1.1L6.2 14.7A1 1 0 0 0 7 16h10a1 1 0 0 0 .8-1.6l-1.4-1.7a2 2 0 0 1-.37-1.1V8a4 4 0 0 0-4-4Z"
         stroke="currentColor"
@@ -159,11 +138,7 @@ function IconBellPolicy({ className }: IconProps) {
 
 function IconDashboard({ className }: IconProps) {
   return (
-    <svg
-      viewBox="0 0 24 24"
-      aria-hidden="true"
-      className={className}
-    >
+    <svg viewBox="0 0 24 24" aria-hidden="true" className={className}>
       <path
         d="M4 11a8 8 0 0 1 16 0v5a2 2 0 0 1-2 2h-2"
         stroke="currentColor"
@@ -184,17 +159,17 @@ function IconDashboard({ className }: IconProps) {
         strokeLinecap="round"
         strokeLinejoin="round"
       />
-      <circle
-        cx="12"
-        cy="12"
-        r="1"
-        fill="currentColor"
-      />
+      <circle cx="12" cy="12" r="1" fill="currentColor" />
     </svg>
   );
 }
 
-export default function Features() {
+/* ===============================
+   Component
+================================ */
+export default function Features({
+  onProductTourClick,
+}: FeaturesProps) {
   return (
     <section className="py-20">
       <div className="max-w-6xl mx-auto px-4 text-center">
@@ -209,88 +184,90 @@ export default function Features() {
 
         {/* Row 1 */}
         <div className="mt-12 grid gap-8 md:grid-cols-3 text-left">
-          {/* Card 1 */}
           <div className="bg-slate-950/90 rounded-3xl border border-slate-800 shadow-sm p-6 flex flex-col gap-3">
             <IconLink className="h-7 w-7 text-sky-400" />
             <h3 className="text-lg font-semibold text-slate-50">
               Smart Booking Links
             </h3>
             <p className="text-sm text-slate-400">
-              Give clients one link and Scheddy handles the rest including saved availability, new project details, reference uploads and booking policies automatically.
+              Give clients one link and Scheddy handles the rest including saved
+              availability, new project details, reference uploads and booking
+              policies automatically.
             </p>
           </div>
 
-          {/* Card 2 */}
           <div className="bg-slate-950/90 rounded-3xl border border-slate-800 shadow-sm p-6 flex flex-col gap-3">
             <IconSync className="h-7 w-7 text-sky-400" />
             <h3 className="text-lg font-semibold text-slate-50">
               Real-Time Schedule Sync
             </h3>
             <p className="text-sm text-slate-400">
-              Your calendar changes update instantly across all devices keeping double-bookings out of the question.
+              Your calendar changes update instantly across all devices keeping
+              double-bookings out of the question.
             </p>
           </div>
 
-          {/* Card 3 */}
           <div className="bg-slate-950/90 rounded-3xl border border-slate-800 shadow-sm p-6 flex flex-col gap-3">
             <IconClockRules className="h-7 w-7 text-sky-400" />
             <h3 className="text-lg font-semibold text-slate-50">
               Artist & Studio Availability
             </h3>
             <p className="text-sm text-slate-400">
-              Block days off, travel time, preferred hours and custom rules
-              so every booking fits your actual workflow.
+              Block days off, travel time, preferred hours and custom rules so
+              every booking fits your actual workflow.
             </p>
           </div>
         </div>
 
         {/* Row 2 */}
         <div className="mt-8 grid gap-8 md:grid-cols-3 text-left">
-          {/* Card 4 */}
           <div className="bg-slate-950/90 rounded-3xl border border-slate-800 shadow-sm p-6 flex flex-col gap-3">
             <IconCurrency className="h-7 w-7 text-sky-400" />
             <h3 className="text-lg font-semibold text-slate-50">
               Deposit & Payment Tracking
             </h3>
             <p className="text-sm text-slate-400">
-              Collect deposits securely, view income data and auto-flag unpaid deposits to ensure every booking is backed and locked-in.
+              Collect deposits securely, view income data and auto-flag unpaid
+              deposits to ensure every booking is backed and locked-in.
             </p>
           </div>
 
-          {/* Card 5 */}
           <div className="bg-slate-950/90 rounded-3xl border border-slate-800 shadow-sm p-6 flex flex-col gap-3">
             <IconBellPolicy className="h-7 w-7 text-sky-400" />
             <h3 className="text-lg font-semibold text-slate-50">
               Automated Reminders & Policies
             </h3>
             <p className="text-sm text-slate-400">
-              Scheddy sends text and email confirmations, reminders and no-show warnings on your behalf, enforcing your policies without awkward conversations.
+              Scheddy sends text and email confirmations, reminders and no-show
+              warnings on your behalf, enforcing your policies without awkward
+              conversations.
             </p>
           </div>
 
-          {/* Card 6 */}
           <div className="bg-slate-950/90 rounded-3xl border border-slate-800 shadow-sm p-6 flex flex-col gap-3">
             <IconDashboard className="h-7 w-7 text-sky-400" />
             <h3 className="text-lg font-semibold text-slate-50">
               Unified Scheduling for Every Artist
             </h3>
             <p className="text-sm text-slate-400">
-              Whether you work alone or run a full team, Scheddy gives you one simple dashboard to manage your day.
+              Whether you work alone or run a full team, Scheddy gives you one
+              simple dashboard to manage your day.
             </p>
           </div>
         </div>
       </div>
-      <div className="flex flex-col items-center justify-center gap-4 mt-8">
-          <Button
-  asChild
-  size="sm"
-  variant="outline"
-  className="btn-pulse rounded-full px-8 bg-white text-slate-900 border-white hover:bg-slate-100"
->
-  <Link href="#scheddy-overview">Product Tour</Link>
-</Button>
 
-        </div>
+      {/* CTA */}
+      <div className="flex flex-col items-center justify-center gap-4 mt-8">
+        <Button
+          size="sm"
+          variant="outline"
+          className="btn-pulse rounded-full px-8 bg-white text-slate-900 border-white hover:bg-slate-100"
+          onClick={onProductTourClick}
+        >
+          Product Tour
+        </Button>
+      </div>
     </section>
   );
 }

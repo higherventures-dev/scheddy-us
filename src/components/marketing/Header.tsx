@@ -66,7 +66,7 @@ export default function MarketingHeader() {
         {/* Auth actions */}
         <div className="flex gap-2">
           <Button asChild size="sm" variant="default">
-            <Link href="/#waitlist">Sign up</Link>
+            <Link href="https://app.scheddy.us/auth/sign-up">Sign up</Link>
           </Button>
 
           <Button asChild size="sm" variant="outline">

@@ -1,4 +1,8 @@
 // src/components/marketing/FaqSection.tsx
+"use client";
+
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 import FaqList from "./FaqList";
 import { Reveal } from "./Reveal";
 
@@ -11,9 +15,9 @@ const staticFaqs = [
   },
   {
     id: "2",
-    question: "Do I have to move my whole studio to Scheddy on day one?",
+    question: "Will Scheddy integrate with my existing calendar?",
     answer:
-      "No. You can start with just one artist, one room, or a single booking link. As you get comfortable, you can add more artists, stations, and rules without breaking your current flow.",
+      "Yes. Scheddy currently integrates with Google Calendar, allowing your bookings and availability to stay in sync automatically. Support for additional calendar platforms commonly used by artists and studio owners is part of our ongoing roadmap.",
   },
   {
     id: "3",
@@ -29,21 +33,22 @@ const staticFaqs = [
   },
   {
     id: "5",
-    question: "Will Scheddy integrate with my existing calendar?",
+    question: "Do I have to move my whole studio to Scheddy on day one?",
     answer:
-      "Our goal is to sync with the calendars you already use so you don’t have to manage everything twice. During the beta, we’re focusing on the most common calendar tools used by artists and studio owners.",
+      "No. You can start with just one artist, one room, or a single booking link. As you get comfortable, you can add more artists, stations, and rules without breaking your current flow.",
   },
   {
     id: "6",
-    question: "How do I join the beta or get early access?",
+    question: "How can I participate for free?",
     answer:
-      "Add your studio to the waitlist and we’ll reach out as we open new beta groups. Early studios get direct input into features, pricing, and how Scheddy evolves.",
+      "You can participate by joining the Scheddy waitlist. As we open new beta groups, we invite artists, studio owners, teams, and early partners to test the platform at no cost.",
   },
 ];
 
 export default function FaqSection() {
   return (
     <div className="max-w-5xl mx-auto px-4">
+      {/* Header */}
       <Reveal>
         <div className="mb-10">
           <h2 className="text-3xl md:text-4xl font-semibold text-slate-50">
@@ -52,8 +57,33 @@ export default function FaqSection() {
         </div>
       </Reveal>
 
+      {/* FAQ List */}
       <Reveal delay={0.1}>
         <FaqList faqs={staticFaqs} />
+      </Reveal>
+
+      {/* CTA Button */}
+      <Reveal delay={0.2}>
+        <div className="mt-12 flex justify-center">
+          <Button
+            asChild
+            className="
+              bg-white
+              text-indigo-600
+              hover:bg-slate-100
+              rounded-lg
+              font-medium
+              uppercase
+              tracking-wide
+              px-6
+              py-2
+            "
+          >
+            <Link href="https://app.scheddy.us/auth/sign-up">
+              Get Started
+            </Link>
+          </Button>
+        </div>
       </Reveal>
     </div>
   );

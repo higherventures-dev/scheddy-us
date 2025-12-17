@@ -57,7 +57,7 @@ export default function CtaShowcase() {
               type="submit"
               className="btn-pulse rounded-full px-8 py-3 text-xs md:text-sm font-semibold tracking-[0.2em] uppercase"
             >
-              Join the waitlist
+              Join Our Mailing List
             </Button>
 
           </form>
