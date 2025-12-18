@@ -1,11 +1,39 @@
 "use client";
 
-import { useState } from "react";
+import {
+  useState,
+  forwardRef,
+  useImperativeHandle,
+  useEffect,
+  useRef,
+} from "react";
 import NextImage from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
+import confetti from "canvas-confetti";
+
+/* ===============================
+   Public handle
+================================ */
+export type DemoSectionHandle = {
+  fireConfetti: () => void;
+};
+
+/* ===============================
+   Tattoo assets (simple names)
+================================ */
+const tattooSources = [
+  "/assets/tattoos/1.png",
+  "/assets/tattoos/2.png",
+  "/assets/tattoos/3.png",
+  "/assets/tattoos/4.png",
+  "/assets/tattoos/5.png",
+  "/assets/tattoos/6.png",
+  "/assets/tattoos/7.png",
+  "/assets/tattoos/8.png",
+];
 
 /* ===============================
    Demo content
@@ -40,9 +68,90 @@ const demos = [
   },
 ];
 
-export default function DemoSection() {
-  const [activeId, setActiveId] = useState(demos[0].id);
+const DemoSection = forwardRef<DemoSectionHandle>(function DemoSection(_, ref) {
+  const [activeId, setActiveId] = useState<string>(demos[0].id);
   const activeDemo = demos.find((d) => d.id === activeId) ?? demos[0];
+
+  /* ===============================
+     Confetti infra (NO worker)
+  ================================ */
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const confettiInstanceRef = useRef<ReturnType<typeof confetti.create> | null>(
+    null
+  );
+  const tattooImagesRef = useRef<HTMLImageElement[]>([]);
+  const imagesReadyRef = useRef(false);
+
+  useEffect(() => {
+    // Create canvas
+    const canvas = document.createElement("canvas");
+    canvas.style.position = "fixed";
+    canvas.style.top = "0";
+    canvas.style.left = "0";
+    canvas.style.width = "100%";
+    canvas.style.height = "100%";
+    canvas.style.pointerEvents = "none";
+    canvas.style.zIndex = "9999";
+    document.body.appendChild(canvas);
+    canvasRef.current = canvas;
+
+    // Create confetti instance (NO WORKER)
+    confettiInstanceRef.current = confetti.create(canvas, {
+      resize: true,
+      useWorker: false,
+    });
+
+    // Preload tattoo images safely
+    let loadedCount = 0;
+
+    tattooSources.forEach((src) => {
+      const img = new window.Image();
+      img.onload = () => {
+        tattooImagesRef.current.push(img);
+        loadedCount += 1;
+        if (loadedCount === tattooSources.length) {
+          imagesReadyRef.current = true;
+        }
+      };
+      img.src = src;
+    });
+
+    return () => {
+      canvas.remove();
+    };
+  }, []);
+
+  /* ===============================
+     Public trigger
+  ================================ */
+  useImperativeHandle(ref, () => ({
+    fireConfetti() {
+      if (
+        !confettiInstanceRef.current ||
+        !imagesReadyRef.current ||
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches
+      ) {
+        return;
+      }
+
+      const particleCount = window.innerWidth < 768 ? 5 : 8;
+
+      tattooImagesRef.current.forEach((img) => {
+        confettiInstanceRef.current!({
+          particleCount,
+          startVelocity: 32,
+          spread: 360,
+          gravity: 1.25,
+          scalar: 0.8,
+          shapes: ["image"],
+          shapeOptions: {
+            image: img,
+          },
+          origin: { x: 0.5, y: 0.25 },
+        });
+      });
+    },
+  }));
 
   return (
     <div className="mx-auto max-w-7xl px-4 md:px-8" id="scheddy-overview">
@@ -111,6 +220,7 @@ export default function DemoSection() {
                   alt={activeDemo.alt}
                   fill
                   className="object-cover opacity-[0.92]"
+                  sizes="(min-width: 1024px) 60vw, 100vw"
                 />
               </motion.div>
             </AnimatePresence>
@@ -131,4 +241,6 @@ export default function DemoSection() {
       </div>
     </div>
   );
-}
+});
+
+export default DemoSection;

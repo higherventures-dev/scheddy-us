@@ -32,15 +32,15 @@ type Particle = {
    Assets
 ================================ */
 const tattooSources = [
-  "/assets/tattoos/1.png",
-  "/assets/tattoos/2.png",
-  "/assets/tattoos/3.png",
-  "/assets/tattoos/4.png",
-  "/assets/tattoos/5.png",
-  "/assets/tattoos/6.png",
-  "/assets/tattoos/7.png",
-  "/assets/tattoos/8.png",
-  "/assets/tattoos/9.png",
+  "/assets/tattoos/1t.png",
+  "/assets/tattoos/2t.png",
+  "/assets/tattoos/3t.png",
+  "/assets/tattoos/4t.png",
+  "/assets/tattoos/5t.png",
+  "/assets/tattoos/6t.png",
+  "/assets/tattoos/7t.png",
+  "/assets/tattoos/8t.png",
+  "/assets/tattoos/9t.png",
 ];
 
 const TattooBurst = forwardRef<TattooBurstHandle>(function TattooBurst(_, ref) {
@@ -48,20 +48,23 @@ const TattooBurst = forwardRef<TattooBurstHandle>(function TattooBurst(_, ref) {
   const imagesRef = useRef<HTMLImageElement[]>([]);
   const particlesRef = useRef<Particle[]>([]);
   const rafRef = useRef<number | null>(null);
+  const readyRef = useRef(false);
 
   /* ===============================
-     Setup
+     Setup canvas + preload images
   ================================ */
   useEffect(() => {
+    // Canvas
     const canvas = document.createElement("canvas");
     canvas.style.position = "fixed";
     canvas.style.inset = "0";
     canvas.style.pointerEvents = "none";
     canvas.style.zIndex = "9999";
     document.body.appendChild(canvas);
-
-    const ctx = canvas.getContext("2d")!;
     canvasRef.current = canvas;
+
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
 
     const resize = () => {
       canvas.width = window.innerWidth;
@@ -71,11 +74,25 @@ const TattooBurst = forwardRef<TattooBurstHandle>(function TattooBurst(_, ref) {
     resize();
     window.addEventListener("resize", resize);
 
-    tattooSources.forEach((src) => {
-      const img = new Image();
-      img.src = src;
-      imagesRef.current.push(img);
-    });
+    // 🔒 PRELOAD IMAGES (CRITICAL)
+    Promise.all(
+      tattooSources.map(
+        (src) =>
+          new Promise<HTMLImageElement>((resolve, reject) => {
+            const img = new Image();
+            img.src = src;
+            img.onload = () => resolve(img);
+            img.onerror = reject;
+          })
+      )
+    )
+      .then((imgs) => {
+        imagesRef.current = imgs;
+        readyRef.current = true;
+      })
+      .catch((err) => {
+        console.error("TattooBurst image load failed", err);
+      });
 
     return () => {
       window.removeEventListener("resize", resize);
@@ -91,11 +108,13 @@ const TattooBurst = forwardRef<TattooBurstHandle>(function TattooBurst(_, ref) {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const ctx = canvas.getContext("2d")!;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    particlesRef.current.forEach((p, i) => {
-      p.vy += 0.35;
+    particlesRef.current = particlesRef.current.filter((p) => {
+      p.vy += 0.4;
       p.x += p.vx;
       p.y += p.vy;
       p.rotation += p.vr;
@@ -103,34 +122,29 @@ const TattooBurst = forwardRef<TattooBurstHandle>(function TattooBurst(_, ref) {
       ctx.save();
       ctx.translate(p.x, p.y);
       ctx.rotate(p.rotation);
-      ctx.drawImage(
-        p.image,
-        -p.size / 2,
-        -p.size / 2,
-        p.size,
-        p.size
-      );
+      ctx.drawImage(p.image, -p.size / 2, -p.size / 2, p.size, p.size);
       ctx.restore();
 
-      if (p.y > canvas.height + 300) {
-        particlesRef.current.splice(i, 1);
-      }
+      return p.y < canvas.height + 400;
     });
 
     rafRef.current = requestAnimationFrame(animate);
   };
 
   /* ===============================
-     Fire burst
+     Fire burst (SAFE)
   ================================ */
   const fire = () => {
-    const canvas = canvasRef.current;
-    if (!canvas || imagesRef.current.length === 0) return;
+    if (!readyRef.current || !canvasRef.current) {
+      console.warn("TattooBurst not ready yet");
+      return;
+    }
 
+    const canvas = canvasRef.current;
     const cx = canvas.width / 2;
     const cy = canvas.height * 0.25;
 
-    for (let i = 0; i < 24; i++) {
+    for (let i = 0; i < 28; i++) {
       const img =
         imagesRef.current[
           Math.floor(Math.random() * imagesRef.current.length)
@@ -139,11 +153,11 @@ const TattooBurst = forwardRef<TattooBurstHandle>(function TattooBurst(_, ref) {
       particlesRef.current.push({
         x: cx,
         y: cy,
-        vx: (Math.random() - 0.5) * 14,
-        vy: Math.random() * -18 - 6,
+        vx: (Math.random() - 0.5) * 16,
+        vy: Math.random() * -22 - 8,
         rotation: Math.random() * Math.PI,
-        vr: (Math.random() - 0.5) * 0.25,
-        size: 260 + Math.random() * 160, // 🔥 BIG TATTOOS
+        vr: (Math.random() - 0.5) * 0.35,
+        size: 280 + Math.random() * 180, // BIG
         image: img,
       });
     }
@@ -154,9 +168,7 @@ const TattooBurst = forwardRef<TattooBurstHandle>(function TattooBurst(_, ref) {
   /* ===============================
      Expose API
   ================================ */
-  useImperativeHandle(ref, () => ({
-    fire,
-  }));
+  useImperativeHandle(ref, () => ({ fire }));
 
   return null;
 });
